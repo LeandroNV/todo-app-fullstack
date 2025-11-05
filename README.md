@@ -195,14 +195,44 @@ MONGODB_URI=mongodb://localhost:27017/todoapp
 CORS_ORIGIN=http://localhost:5173
 ```
 
-## 🐳 Próximos Pasos (Docker y Jenkins)
+## 🐳 Docker (IMPLEMENTADO)
 
-Esta aplicación está lista para ser dockerizada. Los próximos pasos incluirán:
+La aplicación está completamente dockerizada y lista para usar:
 
-1. **Dockerfiles** para frontend y backend
-2. **docker-compose.yml** para orquestación local
-3. **Jenkinsfile** para CI/CD pipeline
-4. **Configuración de staging/producción**
+### Inicio Rápido con Docker
+
+```bash
+# Iniciar todos los servicios
+docker compose up -d
+
+# Ver logs
+docker compose logs -f
+
+# Detener
+docker compose down
+```
+
+**O usa el script de Windows:**
+```bash
+docker.bat
+```
+
+### Servicios Docker
+- ✅ **Frontend**: Vue 3 + Nginx (Puerto 80)
+- ✅ **Backend**: Node.js + Express (Puerto 3000)
+- ✅ **MongoDB**: Base de datos (Puerto 27017)
+- ✅ **Network**: Red bridge personalizada
+- ✅ **Volumes**: Persistencia de datos
+- ✅ **Healthchecks**: Monitoreo de servicios
+
+📖 **Documentación completa**: Ver [README.Docker.md](README.Docker.md)
+
+## 🔜 Próximos Pasos (Jenkins y CI/CD)
+
+1. **Jenkinsfile** para CI/CD pipeline
+2. **Tests automatizados** (unitarios, integración, E2E)
+3. **Configuración de staging/producción**
+4. **Monitoreo y alertas**
 
 ## 📝 Modelo de Datos
 

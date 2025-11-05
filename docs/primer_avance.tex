@@ -1,0 +1,513 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{titlesec}
+
+% Configuración de página
+\geometry{margin=2.5cm}
+
+% Configuración de enlaces
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Primer Avance - Todo App},
+}
+
+% Configuración de código
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    backgroundcolor=\color{gray!10},
+    commentstyle=\color{green!50!black},
+    keywordstyle=\color{blue},
+    stringstyle=\color{red}
+}
+
+% Encabezado y pie de página
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Primer Avance - Todo App}
+\lhead{DevOps}
+\rfoot{Página \thepage}
+
+\begin{document}
+
+% ===============================
+% PORTADA
+% ===============================
+\begin{titlepage}
+    \centering
+    \vspace{2cm}
+    
+    {\Huge\bfseries Primer Avance del Proyecto\par}
+    \vspace{1cm}
+    {\LARGE Todo App\par}
+    \vspace{0.5cm}
+    {\large Aplicación Full Stack de Gestión de Tareas\par}
+    
+    \vspace{3cm}
+    
+    {\Large\textbf{Integrantes:}\par}
+    \vspace{0.5cm}
+    {\large
+        JAVIER ALBEIRO AGAMEZ SILGADO\\[0.3cm]
+        OSCAR DUVAN ALVAREZ CARO\\[0.3cm]
+        NEIDY MICHELLE CRUZ ROSALEZ\\[0.3cm]
+        MICHELLE MOREA NINCO\\[0.3cm]
+        LEANDRO NICOLAS VARGAS CUBIDES\\[0.3cm]
+    }
+    
+    \vfill
+    
+    {\large\textbf{Fecha de entrega:} 04 de Noviembre de 2025\par}
+    \vspace{0.5cm}
+    {\large\textbf{Repositorio GitHub:}\par}
+    \vspace{0.3cm}
+    {\small\url{https://github.com/LeandroNV/todo-app-fullstack}\par}
+    
+    \vspace{1cm}
+\end{titlepage}
+
+% ===============================
+% ÍNDICE
+% ===============================
+\tableofcontents
+\newpage
+
+% ===============================
+% DESCRIPCIÓN TÉCNICA
+% ===============================
+\section{Descripción Técnica}
+
+\subsection{¿Qué se hizo en este avance?}
+
+En este primer avance se desarrolló una aplicación completa de gestión de tareas (To-Do App) siguiendo la arquitectura de microservicios. El proyecto incluye:
+
+\begin{itemize}
+    \item \textbf{Frontend completo:} Desarrollado con Vue 3, TypeScript y Tailwind CSS, implementando 4 componentes principales (TodoForm, TodoItem, TodoFilters, TodoStats).
+    
+    \item \textbf{Backend robusto:} API REST completa con Node.js, Express y TypeScript, incluyendo 10 endpoints para operaciones CRUD y estadísticas.
+    
+    \item \textbf{Base de datos:} MongoDB con Mongoose como ODM, implementando validaciones y índices para optimizar el rendimiento.
+    
+    \item \textbf{Dockerización completa:} Se crearon Dockerfiles para cada servicio y un docker-compose.yml para orquestar todos los contenedores.
+    
+    \item \textbf{Documentación exhaustiva:} 6 archivos de documentación (README, SETUP, QUICKSTART, etc.) y scripts de utilidad.
+\end{itemize}
+
+\subsection{¿Qué servicios contiene el sistema?}
+
+El sistema está compuesto por tres servicios principales:
+
+\begin{enumerate}
+    \item \textbf{Frontend (Vue 3)}
+    \begin{itemize}
+        \item Puerto: 80
+        \item Tecnologías: Vue 3, TypeScript, Tailwind CSS, Vite
+        \item Servidor: Nginx (en producción)
+        \item Características: SPA responsive con estado reactivo
+    \end{itemize}
+    
+    \item \textbf{Backend (Node.js + Express)}
+    \begin{itemize}
+        \item Puerto: 3000
+        \item Tecnologías: Node.js 20, Express, TypeScript, Mongoose
+        \item API REST con 10 endpoints
+        \item Validaciones y manejo de errores centralizado
+    \end{itemize}
+    
+    \item \textbf{Base de Datos (MongoDB)}
+    \begin{itemize}
+        \item Puerto: 27017
+        \item Versión: MongoDB 7 (Alpine)
+        \item Persistencia: Volúmenes Docker
+        \item Healthcheck configurado
+    \end{itemize}
+\end{enumerate}
+
+\subsection{¿Cómo se conectan?}
+
+La arquitectura de conexión sigue el siguiente flujo:
+
+\begin{lstlisting}[language=bash, caption=Flujo de comunicación entre servicios]
+Usuario (Navegador)
+    |
+    | HTTP (Puerto 80)
+    v
+Frontend (Vue 3 + Nginx)
+    |
+    | REST API (Puerto 3000)
+    | Endpoint: http://backend:3000/api
+    v
+Backend (Node.js + Express)
+    |
+    | MongoDB Protocol (Puerto 27017)
+    | URI: mongodb://mongodb:27017/todoapp
+    v
+MongoDB (Base de Datos)
+\end{lstlisting}
+
+\textbf{Red Docker:} Todos los servicios están conectados a través de una red bridge personalizada llamada \texttt{todo-network}, lo que permite la comunicación interna mediante nombres de servicio.
+
+\textbf{Variables de Entorno:}
+\begin{itemize}
+    \item Frontend: \texttt{VITE\_API\_URL=http://localhost:3000/api}
+    \item Backend: \texttt{MONGODB\_URI=mongodb://mongodb:27017/todoapp}
+    \item Backend: \texttt{CORS\_ORIGIN=http://localhost}
+\end{itemize}
+
+\subsection{Estructura de carpetas y archivos}
+
+\begin{lstlisting}[caption=Estructura del proyecto]
+todo-app-fullstack/
+|-- frontend/
+|   |-- src/
+|   |   |-- components/
+|   |   |   |-- TodoForm.vue
+|   |   |   |-- TodoItem.vue
+|   |   |   |-- TodoFilters.vue
+|   |   |   `-- TodoStats.vue
+|   |   |-- services/
+|   |   |   `-- api.ts
+|   |   |-- stores/
+|   |   |   `-- todoStore.ts
+|   |   |-- types/
+|   |   |   `-- index.ts
+|   |   |-- App.vue
+|   |   `-- main.ts
+|   |-- Dockerfile
+|   |-- nginx.conf
+|   `-- package.json
+|
+|-- backend/
+|   |-- src/
+|   |   |-- config/
+|   |   |   `-- database.ts
+|   |   |-- controllers/
+|   |   |   `-- todoController.ts
+|   |   |-- middleware/
+|   |   |   `-- errorHandler.ts
+|   |   |-- models/
+|   |   |   `-- Todo.ts
+|   |   |-- routes/
+|   |   |   `-- todoRoutes.ts
+|   |   |-- types/
+|   |   |   `-- index.ts
+|   |   `-- server.ts
+|   |-- Dockerfile
+|   |-- .env
+|   `-- package.json
+|
+|-- docs/
+|   `-- primer_avance.tex
+|
+|-- docker-compose.yml
+|-- .dockerignore
+|-- README.md
+`-- SETUP.md
+\end{lstlisting}
+
+\newpage
+
+% ===============================
+% EVIDENCIA DE EJECUCIÓN
+% ===============================
+\section{Evidencia de Ejecución}
+
+\subsection{Creación del Repositorio en GitHub}
+
+\textbf{Descripción:} Se creó el repositorio \texttt{todo-app-fullstack} en GitHub con visibilidad pública. El repositorio incluye todo el código fuente, documentación y configuraciones necesarias.
+
+\textbf{URL del repositorio:} \url{https://github.com/LeandroNV/todo-app-fullstack}
+
+\textbf{Estadísticas del primer commit:}
+\begin{itemize}
+    \item Commit ID: \texttt{6a791e5}
+    \item Archivos: 46
+    \item Líneas añadidas: 9,172
+    \item Mensaje: "feat: Aplicación To-Do Full Stack completa"
+\end{itemize}
+
+\textbf{Captura esperada:} Página principal del repositorio en GitHub mostrando los archivos, README y descripción del proyecto.
+
+\subsection{Terminal con docker compose up}
+
+\textbf{Descripción:} Ejecución del comando \texttt{docker compose up} que:
+\begin{enumerate}
+    \item Construye las imágenes Docker para frontend y backend
+    \item Descarga la imagen de MongoDB 7 Alpine
+    \item Crea la red \texttt{todo-network}
+    \item Inicia los tres contenedores en el orden correcto (MongoDB → Backend → Frontend)
+    \item Ejecuta los healthchecks para verificar que los servicios estén funcionando
+\end{enumerate}
+
+\textbf{Comandos esperados en la terminal:}
+\begin{lstlisting}[language=bash]
+$ docker compose up
+
+[+] Building 45.2s (24/24) FINISHED
+[+] Running 4/4
+ - Network todo-network     Created
+ - Container todo-mongodb   Started
+ - Container todo-backend   Started
+ - Container todo-frontend  Started
+\end{lstlisting}
+
+\textbf{Captura esperada:} Terminal mostrando los logs de los tres contenedores ejecutándose simultáneamente, con mensajes de:
+\begin{itemize}
+    \item MongoDB: "Waiting for connections on port 27017"
+    \item Backend: "MongoDB conectado exitosamente" y "Servidor corriendo en http://localhost:3000"
+    \item Frontend: Nginx iniciado correctamente
+\end{itemize}
+
+\subsection{Navegador accediendo a la aplicación}
+
+\textbf{Descripción:} Aplicación funcionando en \texttt{http://localhost} mostrando:
+\begin{itemize}
+    \item Dashboard con estadísticas (Total, Completadas, Pendientes, Alta Prioridad, Progreso)
+    \item Filtros de búsqueda, estado y prioridad
+    \item Formulario para crear nuevas tareas
+    \item Indicador de conexión en verde (Conectado)
+    \item Interfaz responsive con diseño moderno en Tailwind CSS
+\end{itemize}
+
+\textbf{URLs de prueba:}
+\begin{itemize}
+    \item Frontend: \url{http://localhost}
+    \item API Backend: \url{http://localhost:3000/api/todos}
+    \item Health Check: \url{http://localhost:3000/health}
+\end{itemize}
+
+\textbf{Captura esperada:} Navegador mostrando la interfaz completa de la aplicación con todas las secciones visibles y el indicador "Conectado" en verde.
+
+\subsection{Verificación de contenedores}
+
+\textbf{Comando adicional:}
+\begin{lstlisting}[language=bash]
+$ docker ps
+
+CONTAINER ID   IMAGE              STATUS                    PORTS
+xxx            todo-frontend      Up 2 minutes (healthy)    0.0.0.0:80->80/tcp
+xxx            todo-backend       Up 2 minutes (healthy)    0.0.0.0:3000->3000/tcp
+xxx            todo-mongodb       Up 2 minutes (healthy)    0.0.0.0:27017->27017/tcp
+\end{lstlisting}
+
+\textbf{Captura esperada:} Terminal mostrando los tres contenedores con estado "healthy" y los puertos correctamente mapeados.
+
+\newpage
+
+% ===============================
+% PROBLEMAS ENFRENTADOS
+% ===============================
+\section{Problemas Enfrentados}
+
+Durante el desarrollo de este primer avance, se enfrentaron los siguientes desafíos técnicos:
+
+\subsection{Configuración de CORS}
+
+\textbf{Problema:} Al intentar conectar el frontend con el backend, se presentaban errores de CORS (Cross-Origin Resource Sharing), impidiendo que las peticiones HTTP llegaran al API.
+
+\textbf{Solución:} 
+\begin{itemize}
+    \item Se configuró el middleware \texttt{cors} en el backend de Express
+    \item Se estableció la variable de entorno \texttt{CORS\_ORIGIN} para controlar los orígenes permitidos
+    \item En producción con Docker, se ajustó a \texttt{http://localhost} para permitir las peticiones desde el contenedor de frontend
+\end{itemize}
+
+\subsection{Comunicación entre contenedores Docker}
+
+\textbf{Problema:} Los contenedores no podían comunicarse entre sí usando \texttt{localhost}, ya que cada contenedor tiene su propia red interna.
+
+\textbf{Solución:}
+\begin{itemize}
+    \item Se creó una red bridge personalizada (\texttt{todo-network})
+    \item Se configuraron los servicios para usar nombres de servicio en lugar de localhost (ejemplo: \texttt{mongodb://mongodb:27017})
+    \item Se implementaron healthchecks para asegurar que los servicios estén listos antes de que otros dependan de ellos
+\end{itemize}
+
+\subsection{Build multi-stage para el frontend}
+
+\textbf{Problema:} La imagen Docker del frontend era demasiado grande (más de 1GB) al incluir todas las dependencias de desarrollo.
+
+\textbf{Solución:}
+\begin{itemize}
+    \item Se implementó un Dockerfile multi-stage
+    \item Primera etapa: construye la aplicación con Node.js y todas las dependencias
+    \item Segunda etapa: copia solo los archivos estáticos compilados a una imagen Nginx Alpine (menos de 50MB)
+    \item Resultado: reducción del 95\% en el tamaño de la imagen
+\end{itemize}
+
+\subsection{Persistencia de datos en MongoDB}
+
+\textbf{Problema:} Los datos se perdían cada vez que se reiniciaba el contenedor de MongoDB.
+
+\textbf{Solución:}
+\begin{itemize}
+    \item Se configuraron volúmenes Docker (\texttt{mongodb\_data} y \texttt{mongodb\_config})
+    \item Los volúmenes persisten los datos incluso cuando los contenedores se detienen o eliminan
+    \item Se documentó el proceso de backup y restauración
+\end{itemize}
+
+\subsection{Variables de entorno en tiempo de build}
+
+\textbf{Problema:} Vue 3 con Vite requiere que las variables de entorno estén disponibles en tiempo de compilación, no en tiempo de ejecución.
+
+\textbf{Solución:}
+\begin{itemize}
+    \item Se configuraron las variables con el prefijo \texttt{VITE\_}
+    \item Se pasaron como argumentos en el docker-compose.yml
+    \item Se documentó cómo modificarlas para diferentes entornos (desarrollo, staging, producción)
+\end{itemize}
+
+\newpage
+
+% ===============================
+% PRÓXIMOS PASOS
+% ===============================
+\section{Próximos Pasos}
+
+Para el siguiente avance del proyecto, se planea implementar las siguientes mejoras y funcionalidades:
+
+\subsection{Integración Continua con Jenkins}
+
+\begin{itemize}
+    \item \textbf{Pipeline automatizado:} Configurar un Jenkinsfile con stages para:
+    \begin{itemize}
+        \item Checkout del código desde GitHub
+        \item Instalación de dependencias
+        \item Ejecución de linters (ESLint, Prettier)
+        \item Compilación de TypeScript
+        \item Build de imágenes Docker
+        \item Push a Docker Registry
+    \end{itemize}
+    
+    \item \textbf{Webhooks:} Configurar GitHub webhooks para trigger automático del pipeline en cada push o pull request
+    
+    \item \textbf{Notificaciones:} Implementar notificaciones de éxito o fallo del pipeline (email, Slack, etc.)
+\end{itemize}
+
+\subsection{Pruebas Automatizadas}
+
+\begin{itemize}
+    \item \textbf{Tests unitarios:}
+    \begin{itemize}
+        \item Frontend: Vitest + Vue Test Utils
+        \item Backend: Jest
+        \item Objetivo: mínimo 80\% de cobertura de código
+    \end{itemize}
+    
+    \item \textbf{Tests de integración:}
+    \begin{itemize}
+        \item Supertest para endpoints del API
+        \item Validar respuestas y códigos de estado HTTP
+        \item Probar flujos completos CRUD
+    \end{itemize}
+    
+    \item \textbf{Tests End-to-End (E2E):}
+    \begin{itemize}
+        \item Playwright o Cypress
+        \item Simular interacciones de usuario reales
+        \item Validar flujos completos de la aplicación
+    \end{itemize}
+\end{itemize}
+
+\subsection{Despliegue Continuo (CD)}
+
+\begin{itemize}
+    \item \textbf{Ambientes:} Configurar tres entornos separados:
+    \begin{itemize}
+        \item Development (rama develop)
+        \item Staging (rama staging)
+        \item Production (rama main)
+    \end{itemize}
+    
+    \item \textbf{Estrategias de despliegue:}
+    \begin{itemize}
+        \item Blue-Green deployment
+        \item Rolling updates
+        \item Rollback automático en caso de fallo
+    \end{itemize}
+    
+    \item \textbf{Docker Registry:} Configurar un registry privado para almacenar las imágenes
+\end{itemize}
+
+\subsection{Monitoreo y Observabilidad}
+
+\begin{itemize}
+    \item \textbf{Logging:}
+    \begin{itemize}
+        \item Centralizar logs con ELK Stack (Elasticsearch, Logstash, Kibana)
+        \item Logs estructurados en formato JSON
+        \item Niveles de log apropiados (error, warn, info, debug)
+    \end{itemize}
+    
+    \item \textbf{Métricas:}
+    \begin{itemize}
+        \item Prometheus para recolección de métricas
+        \item Grafana para visualización
+        \item Alertas configuradas para errores críticos
+    \end{itemize}
+    
+    \item \textbf{Healthchecks:} Endpoints de health mejorados con información detallada del estado de cada servicio
+\end{itemize}
+
+\subsection{Mejoras de Seguridad}
+
+\begin{itemize}
+    \item \textbf{Autenticación:} Implementar JWT para autenticación de usuarios
+    \item \textbf{Autorización:} Sistema de roles y permisos
+    \item \textbf{HTTPS:} Configurar certificados SSL/TLS
+    \item \textbf{Secrets:} Usar Docker secrets o vault para gestionar credenciales
+    \item \textbf{Escaneo de vulnerabilidades:} Integrar Trivy o Snyk en el pipeline
+\end{itemize}
+
+\subsection{Optimizaciones}
+
+\begin{itemize}
+    \item \textbf{Caché:} Implementar Redis para caché de datos frecuentes
+    \item \textbf{CDN:} Servir assets estáticos desde un CDN
+    \item \textbf{Database indexing:} Optimizar índices de MongoDB basados en queries más frecuentes
+    \item \textbf{Lazy loading:} Implementar carga diferida en componentes Vue
+\end{itemize}
+
+\newpage
+
+% ===============================
+% CONCLUSIONES
+% ===============================
+\section{Conclusiones}
+
+En este primer avance se logró:
+
+\begin{itemize}
+    \item Desarrollar una aplicación full-stack funcional y completa
+    \item Implementar una arquitectura de microservicios con Docker
+    \item Establecer las bases para CI/CD con documentación exhaustiva
+    \item Crear un repositorio bien estructurado y documentado en GitHub
+    \item Configurar comunicación eficiente entre los servicios
+\end{itemize}
+
+El proyecto está ahora en un estado sólido para continuar con la implementación de CI/CD, pruebas automatizadas y mejoras de seguridad en los siguientes avances.
+
+\vspace{1cm}
+
+\textbf{Stack tecnológico final:}
+\begin{itemize}
+    \item Frontend: Vue 3, TypeScript, Tailwind CSS, Vite, Nginx
+    \item Backend: Node.js 20, Express, TypeScript, Mongoose
+    \item Database: MongoDB 7 Alpine
+    \item Infraestructura: Docker, Docker Compose
+    \item Próximo: Jenkins, Tests automatizados
+\end{itemize}
+
+\end{document}
+
