@@ -1,0 +1,30 @@
+{
+  "name": "todo-app-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Todo App",
+  "main": "dist/server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "lint": "eslint src --ext .ts"
+  },
+  "keywords": ["todo", "api", "mongodb", "express"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongoose": "^8.7.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/cors": "^2.8.17",
+    "@types/node": "^22.18.11",
+    "typescript": "^5.9.0",
+    "tsx": "^4.19.2"
+  }
+}
+
