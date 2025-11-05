@@ -18,12 +18,14 @@ Aplicación completa de gestión de tareas construida con Vue 3, Node.js, Expres
 ## 🛠️ Stack Tecnológico
 
 ### Frontend
+
 - **Vue 3** - Framework progresivo de JavaScript
 - **TypeScript** - Tipado estático
 - **Tailwind CSS** - Framework de utilidades CSS
 - **Vite** - Build tool y dev server
 
 ### Backend
+
 - **Node.js** - Runtime de JavaScript
 - **Express** - Framework web minimalista
 - **TypeScript** - Tipado estático
@@ -118,28 +120,28 @@ El frontend estará disponible en `http://localhost:5173`
 
 ### Tareas
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| GET | `/api/todos` | Obtener todas las tareas |
-| GET | `/api/todos?status=completed` | Filtrar por estado |
-| GET | `/api/todos?priority=high` | Filtrar por prioridad |
-| GET | `/api/todos/:id` | Obtener una tarea específica |
-| POST | `/api/todos` | Crear nueva tarea |
-| PUT | `/api/todos/:id` | Actualizar tarea completa |
-| PATCH | `/api/todos/:id/toggle` | Cambiar estado completado |
-| DELETE | `/api/todos/:id` | Eliminar tarea |
+| Método | Endpoint                      | Descripción                  |
+| ------ | ----------------------------- | ---------------------------- |
+| GET    | `/api/todos`                  | Obtener todas las tareas     |
+| GET    | `/api/todos?status=completed` | Filtrar por estado           |
+| GET    | `/api/todos?priority=high`    | Filtrar por prioridad        |
+| GET    | `/api/todos/:id`              | Obtener una tarea específica |
+| POST   | `/api/todos`                  | Crear nueva tarea            |
+| PUT    | `/api/todos/:id`              | Actualizar tarea completa    |
+| PATCH  | `/api/todos/:id/toggle`       | Cambiar estado completado    |
+| DELETE | `/api/todos/:id`              | Eliminar tarea               |
 
 ### Estadísticas
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| GET | `/api/stats` | Obtener estadísticas |
+| Método | Endpoint     | Descripción          |
+| ------ | ------------ | -------------------- |
+| GET    | `/api/stats` | Obtener estadísticas |
 
 ### Salud
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| GET | `/health` | Estado del servidor |
+| Método | Endpoint  | Descripción         |
+| ------ | --------- | ------------------- |
+| GET    | `/health` | Estado del servidor |
 
 ## 📦 Scripts Disponibles
 
@@ -175,13 +177,17 @@ npm start         # Iniciar servidor en producción
 ### Variables de Entorno
 
 #### Frontend
+
 Crear `.env` en la raíz del proyecto:
+
 ```env
 VITE_API_URL=http://localhost:3000/api
 ```
 
 #### Backend
+
 Ya existe `.env` en `backend/`:
+
 ```env
 PORT=3000
 NODE_ENV=development
@@ -203,10 +209,10 @@ Esta aplicación está lista para ser dockerizada. Los próximos pasos incluirá
 ```typescript
 interface Todo {
   _id: string
-  title: string              // Máximo 200 caracteres
-  description: string        // Máximo 1000 caracteres
-  completed: boolean         // Default: false
-  priority: 'low' | 'medium' | 'high'  // Default: 'medium'
+  title: string // Máximo 200 caracteres
+  description: string // Máximo 1000 caracteres
+  completed: boolean // Default: false
+  priority: 'low' | 'medium' | 'high' // Default: 'medium'
   dueDate: Date | null
   tags: string[]
   createdAt: Date
@@ -214,14 +220,10 @@ interface Todo {
 }
 ```
 
-## 🤝 Contribuir
-
-Esta es una aplicación de ejemplo para aprendizaje de Docker y Jenkins. ¡Siéntete libre de experimentar!
-
 ## 📄 Licencia
 
 ISC
 
 ---
 
-**Hecho con ❤️ usando Vue 3, Node.js, Express y MongoDB**
+**Stack: Vue 3, Node.js, Express y MongoDB**
