@@ -213,11 +213,13 @@ docker compose down
 ```
 
 **O usa el script de Windows:**
+
 ```bash
 docker.bat
 ```
 
 ### Servicios Docker
+
 - ✅ **Frontend**: Vue 3 + Nginx (Puerto 80)
 - ✅ **Backend**: Node.js + Express (Puerto 3000)
 - ✅ **MongoDB**: Base de datos (Puerto 27017)

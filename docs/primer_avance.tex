@@ -237,8 +237,6 @@ todo-app-fullstack/
     \item Mensaje: "feat: Aplicación To-Do Full Stack completa"
 \end{itemize}
 
-\textbf{Captura esperada:} Página principal del repositorio en GitHub mostrando los archivos, README y descripción del proyecto.
-
 \subsection{Terminal con docker compose up}
 
 \textbf{Descripción:} Ejecución del comando \texttt{docker compose up} que:
@@ -262,7 +260,6 @@ $ docker compose up
  - Container todo-frontend  Started
 \end{lstlisting}
 
-\textbf{Captura esperada:} Terminal mostrando los logs de los tres contenedores ejecutándose simultáneamente, con mensajes de:
 \begin{itemize}
     \item MongoDB: "Waiting for connections on port 27017"
     \item Backend: "MongoDB conectado exitosamente" y "Servidor corriendo en http://localhost:3000"
@@ -287,7 +284,6 @@ $ docker compose up
     \item Health Check: \url{http://localhost:3000/health}
 \end{itemize}
 
-\textbf{Captura esperada:} Navegador mostrando la interfaz completa de la aplicación con todas las secciones visibles y el indicador "Conectado" en verde.
 
 \subsection{Verificación de contenedores}
 
@@ -301,7 +297,6 @@ xxx            todo-backend       Up 2 minutes (healthy)    0.0.0.0:3000->3000/t
 xxx            todo-mongodb       Up 2 minutes (healthy)    0.0.0.0:27017->27017/tcp
 \end{lstlisting}
 
-\textbf{Captura esperada:} Terminal mostrando los tres contenedores con estado "healthy" y los puertos correctamente mapeados.
 
 \newpage
 
