@@ -60,19 +60,20 @@ Una **aplicación completa de gestión de tareas** (To-Do App) full-stack con fr
 
 ## 📦 Tecnologías
 
-| Capa | Tecnología | Descripción |
-|------|-----------|-------------|
-| **Frontend** | Vue 3 + TypeScript | Framework reactivo con tipado |
-| **Estilos** | Tailwind CSS | Utilidades CSS modernas |
-| **Build** | Vite | Build tool rápido |
-| **Backend** | Node.js + Express | Servidor API REST |
-| **Lenguaje** | TypeScript | Tipado en todo el proyecto |
-| **Base de Datos** | MongoDB | Base de datos NoSQL |
-| **ODM** | Mongoose | Modelado de datos |
+| Capa              | Tecnología         | Descripción                   |
+| ----------------- | ------------------ | ----------------------------- |
+| **Frontend**      | Vue 3 + TypeScript | Framework reactivo con tipado |
+| **Estilos**       | Tailwind CSS       | Utilidades CSS modernas       |
+| **Build**         | Vite               | Build tool rápido             |
+| **Backend**       | Node.js + Express  | Servidor API REST             |
+| **Lenguaje**      | TypeScript         | Tipado en todo el proyecto    |
+| **Base de Datos** | MongoDB            | Base de datos NoSQL           |
+| **ODM**           | Mongoose           | Modelado de datos             |
 
 ## ✨ Características Principales
 
 ### 🎨 Frontend
+
 - ✅ Interfaz moderna y responsive
 - ✅ Dashboard con estadísticas visuales
 - ✅ Filtros y búsqueda en tiempo real
@@ -82,6 +83,7 @@ Una **aplicación completa de gestión de tareas** (To-Do App) full-stack con fr
 - ✅ Indicador de conexión
 
 ### 🔧 Backend
+
 - ✅ API REST completa (CRUD)
 - ✅ Validaciones de datos
 - ✅ Filtros por query params
@@ -91,6 +93,7 @@ Una **aplicación completa de gestión de tareas** (To-Do App) full-stack con fr
 - ✅ Hot reload en desarrollo
 
 ### 🗃️ Base de Datos
+
 - ✅ Esquema con validaciones
 - ✅ Índices para rendimiento
 - ✅ Timestamps automáticos
@@ -158,35 +161,39 @@ to-do-app/
 ## 🚀 Inicio Rápido
 
 ### 1️⃣ Instalar MongoDB
+
 - Descargar: https://www.mongodb.com/try/download/community
 - O usar Docker: `docker run -d -p 27017:27017 --name mongodb mongo:7-alpine`
 
 ### 2️⃣ Iniciar Backend
+
 ```bash
 cd backend
 npm run dev
 ```
 
 ### 3️⃣ Iniciar Frontend
+
 ```bash
 # En otra terminal
 pnpm dev
 ```
 
 ### 4️⃣ Abrir en navegador
+
 http://localhost:5173
 
 ## 🎮 Casos de Uso
 
-| Acción | Descripción |
-|--------|-------------|
-| **Crear** | Completa el formulario y haz clic en "Crear Tarea" |
-| **Editar** | Haz clic en el ícono de lápiz (✏️) |
-| **Completar** | Haz clic en el círculo junto a la tarea |
-| **Eliminar** | Haz clic en el ícono de basura (🗑️) |
-| **Filtrar** | Usa los selectores de estado y prioridad |
-| **Buscar** | Escribe en la barra de búsqueda |
-| **Estadísticas** | Visualiza el dashboard en la parte superior |
+| Acción           | Descripción                                        |
+| ---------------- | -------------------------------------------------- |
+| **Crear**        | Completa el formulario y haz clic en "Crear Tarea" |
+| **Editar**       | Haz clic en el ícono de lápiz (✏️)                 |
+| **Completar**    | Haz clic en el círculo junto a la tarea            |
+| **Eliminar**     | Haz clic en el ícono de basura (🗑️)                |
+| **Filtrar**      | Usa los selectores de estado y prioridad           |
+| **Buscar**       | Escribe en la barra de búsqueda                    |
+| **Estadísticas** | Visualiza el dashboard en la parte superior        |
 
 ## 🎨 Interfaz de Usuario
 
@@ -259,11 +266,13 @@ Usuario ve la nueva tarea
 ## 🔐 Variables de Entorno
 
 ### Frontend (`.env`)
+
 ```env
 VITE_API_URL=http://localhost:3000/api
 ```
 
 ### Backend (`backend/.env`)
+
 ```env
 PORT=3000
 NODE_ENV=development
@@ -274,12 +283,14 @@ CORS_ORIGIN=http://localhost:5173
 ## 📈 Próximos Pasos
 
 ### Docker
+
 1. Crear `Dockerfile` para frontend (multi-stage con nginx)
 2. Crear `Dockerfile` para backend
 3. Crear `docker-compose.yml`
 4. Configurar networking entre contenedores
 
 ### Jenkins
+
 1. Crear `Jenkinsfile` con pipeline
 2. Configurar stages: Checkout, Build, Test, Deploy
 3. Integrar con Docker Registry
@@ -288,14 +299,14 @@ CORS_ORIGIN=http://localhost:5173
 
 ## 📚 Documentación Completa
 
-| Archivo | Contenido |
-|---------|-----------|
-| `README.md` | Documentación completa del proyecto |
-| `SETUP.md` | Guía de instalación detallada |
-| `QUICKSTART.md` | Inicio rápido y requisitos |
-| `PROYECTO_COMPLETADO.md` | Resumen de lo completado |
-| `RESUMEN.md` | Este archivo - Vista general |
-| `backend/README.md` | Documentación del backend |
+| Archivo                  | Contenido                           |
+| ------------------------ | ----------------------------------- |
+| `README.md`              | Documentación completa del proyecto |
+| `SETUP.md`               | Guía de instalación detallada       |
+| `QUICKSTART.md`          | Inicio rápido y requisitos          |
+| `PROYECTO_COMPLETADO.md` | Resumen de lo completado            |
+| `RESUMEN.md`             | Este archivo - Vista general        |
+| `backend/README.md`      | Documentación del backend           |
 
 ## 🎓 Lo que aprenderás
 
@@ -311,20 +322,13 @@ CORS_ORIGIN=http://localhost:5173
 
 ## 💯 Estado del Proyecto
 
-| Componente | Estado | Progreso |
-|------------|--------|----------|
-| Frontend Vue | ✅ Completo | 100% |
-| Backend API | ✅ Completo | 100% |
-| Base de Datos | ✅ Completo | 100% |
-| Documentación | ✅ Completo | 100% |
-| Docker | 🔜 Pendiente | 0% |
-| Jenkins | 🔜 Pendiente | 0% |
-
-## 🎉 ¡Listo para Docker y Jenkins!
-
-Tu aplicación está completamente funcional y lista para ser dockerizada y desplegada con Jenkins. ¡Excelente trabajo! 🚀
-
----
+| Componente    | Estado       | Progreso |
+| ------------- | ------------ | -------- |
+| Frontend Vue  | ✅ Completo  | 100%     |
+| Backend API   | ✅ Completo  | 100%     |
+| Base de Datos | ✅ Completo  | 100%     |
+| Documentación | ✅ Completo  | 100%     |
+| Docker        | 🔜 Pendiente | 0%       |
+| Jenkins       | 🔜 Pendiente | 0%       |
 
 **¿Necesitas ayuda?** Consulta `SETUP.md` para solución de problemas.
-

@@ -1,6 +1,7 @@
 # 🚀 Jenkins CI/CD - Guía Completa
 
 ## 📋 Tabla de Contenidos
+
 - [Instalación](#instalación)
 - [Configuración](#configuración)
 - [Pipeline](#pipeline)
@@ -10,6 +11,7 @@
 ## 🎯 Instalación
 
 ### Requisitos Previos
+
 - Docker y Docker Compose instalados
 - Java JDK 11+ (si instalación nativa)
 - 4GB RAM disponible
@@ -52,8 +54,8 @@ services:
     privileged: true
     user: root
     ports:
-      - "8080:8080"
-      - "50000:50000"
+      - '8080:8080'
+      - '50000:50000'
     volumes:
       - jenkins_home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
@@ -68,6 +70,7 @@ volumes:
 ```
 
 Ejecutar:
+
 ```bash
 docker compose -f jenkins-docker-compose.yml up -d
 ```
@@ -87,6 +90,7 @@ docker compose -f jenkins-docker-compose.yml up -d
 `Manage Jenkins` → `Manage Plugins` → `Available`
 
 Instalar:
+
 - ✅ Docker Pipeline
 - ✅ Docker plugin
 - ✅ GitHub Integration Plugin
@@ -100,6 +104,7 @@ Instalar:
 `Manage Jenkins` → `Global Tool Configuration`
 
 **NodeJS:**
+
 - Name: `NodeJS 20`
 - Install automatically: ✅
 - Version: `NodeJS 20.x`
@@ -172,14 +177,17 @@ docker restart jenkins
 ### 2. Configuración General
 
 **General:**
+
 - Description: `CI/CD Pipeline para Todo App`
 - ✅ GitHub project
 - Project url: `https://github.com/LeandroNV/todo-app-fullstack`
 
 **Build Triggers:**
+
 - ✅ GitHub hook trigger for GITScm polling
 
 **Pipeline:**
+
 - Definition: `Pipeline script from SCM`
 - SCM: `Git`
 - Repository URL: `https://github.com/LeandroNV/todo-app-fullstack.git`
@@ -222,6 +230,7 @@ ngrok http 8080
 En la configuración del Job:
 
 **Build Triggers:**
+
 - ✅ Poll SCM
 - Schedule: `H/5 * * * *` (cada 5 minutos)
 
@@ -237,6 +246,7 @@ En la configuración del Job:
 ### Ejecución Automática
 
 Hacer push al repositorio:
+
 ```bash
 git add .
 git commit -m "test: Trigger Jenkins pipeline"
@@ -265,11 +275,13 @@ Jenkins detectará el cambio y ejecutará automáticamente.
 ### Error: Permission Denied (Docker)
 
 **Problema:**
+
 ```
 Got permission denied while trying to connect to the Docker daemon socket
 ```
 
 **Solución:**
+
 ```bash
 docker exec -u root -it jenkins bash
 usermod -aG docker jenkins
@@ -280,11 +292,13 @@ docker restart jenkins
 ### Error: npm install fails
 
 **Problema:**
+
 ```
 ERESOLVE unable to resolve dependency tree
 ```
 
 **Solución:** Ya está en el Jenkinsfile:
+
 ```groovy
 sh 'npm install --legacy-peer-deps'
 ```
@@ -292,11 +306,13 @@ sh 'npm install --legacy-peer-deps'
 ### Error: Docker command not found
 
 **Problema:**
+
 ```
 docker: command not found
 ```
 
 **Solución:**
+
 ```bash
 docker exec -u root -it jenkins bash
 apt-get update
@@ -308,11 +324,13 @@ docker restart jenkins
 ### Error: Port 8080 already in use
 
 **Solución 1:** Cambiar puerto
+
 ```bash
 docker run -p 8081:8080 -p 50000:50000 ...
 ```
 
 **Solución 2:** Liberar puerto
+
 ```bash
 # Windows
 netstat -ano | findstr :8080
@@ -325,6 +343,7 @@ lsof -ti:8080 | xargs kill -9
 ### Webhook no funciona
 
 **Verificar:**
+
 1. Jenkins es accesible desde internet (usar ngrok si es local)
 2. URL del webhook termina en `/github-webhook/`
 3. Credenciales de GitHub están configuradas
@@ -335,7 +354,9 @@ lsof -ti:8080 | xargs kill -9
 ### Build muy lento
 
 **Optimizaciones:**
+
 1. Usar caché de npm:
+
 ```groovy
 sh 'npm ci' // en lugar de npm install
 ```
@@ -347,6 +368,7 @@ sh 'npm ci' // en lugar de npm install
 ### Pipeline falla en Tests
 
 **Solución:** Ya implementado con `catchError`
+
 ```groovy
 catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
     sh 'npm test || true'
@@ -358,6 +380,7 @@ catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
 ### 1. Versionado de Imágenes
 
 ✅ Ya implementado:
+
 ```groovy
 IMAGE_TAG = "${BUILD_NUMBER}"
 ```
@@ -367,6 +390,7 @@ Cada build genera tags únicos: `1`, `2`, `3`, etc.
 ### 2. Cleanup Automático
 
 ✅ Ya implementado en `post`:
+
 ```groovy
 always {
     sh 'docker image prune -f'
@@ -376,6 +400,7 @@ always {
 ### 3. Healthchecks
 
 ✅ Ya implementado:
+
 ```groovy
 sh 'curl -f http://localhost:3000/health'
 ```
@@ -383,6 +408,7 @@ sh 'curl -f http://localhost:3000/health'
 ### 4. Retry en operaciones críticas
 
 ✅ Ya implementado:
+
 ```groovy
 retry(3) {
     sh 'curl -f http://localhost:3000/health'
@@ -392,6 +418,7 @@ retry(3) {
 ### 5. Notificaciones
 
 Agregar al `post`:
+
 ```groovy
 success {
     mail to: 'equipo@example.com',
@@ -453,8 +480,3 @@ openssl req -newkey rsa:2048 -nodes -keyout key.pem -x509 -days 365 -out certifi
 - [GitHub Integration](https://plugins.jenkins.io/github/)
 
 ---
-
-**¿Problemas?** Consulta los logs de Jenkins o revisa la sección de Troubleshooting.
-
-**¡Pipeline listo para producción!** 🎉
-

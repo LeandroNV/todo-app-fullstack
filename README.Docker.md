@@ -3,6 +3,7 @@
 ## 🚀 Inicio Rápido
 
 ### Requisitos Previos
+
 - Docker Desktop instalado
 - Docker Compose v2.0+
 
@@ -45,18 +46,21 @@ docker compose down -v
 ## 📦 Servicios
 
 ### Frontend (Vue 3 + Nginx)
+
 - **Puerto**: 80
 - **Imagen base**: node:20-alpine (build), nginx:alpine (runtime)
 - **Build**: Multi-stage para optimizar tamaño
 - **Healthcheck**: Verificación HTTP cada 30s
 
 ### Backend (Node.js + Express)
+
 - **Puerto**: 3000
 - **Imagen base**: node:20-alpine
 - **Usuario**: non-root (nodejs:1001)
 - **Healthcheck**: Endpoint /health cada 30s
 
 ### MongoDB
+
 - **Puerto**: 27017
 - **Imagen**: mongo:7-alpine
 - **Persistencia**: Volúmenes Docker
@@ -139,12 +143,14 @@ netstat -ano | findstr :27017
 ### Frontend no se conecta al backend
 
 1. Verificar que el backend esté healthy:
+
 ```bash
 docker compose ps
 curl http://localhost:3000/health
 ```
 
 2. Verificar logs del backend:
+
 ```bash
 docker compose logs backend
 ```
@@ -190,6 +196,7 @@ docker inspect todo-backend --format='{{range .State.Health.Log}}{{.Output}}{{en
 - No exponer MongoDB en producción (eliminar puerto 27017)
 - Usar Docker secrets para credenciales
 - Escanear imágenes con Trivy:
+
 ```bash
 trivy image todo-frontend:latest
 ```
@@ -271,4 +278,3 @@ docker pull registry.tudominio.com/todo-frontend:v1.0
 ---
 
 **¿Problemas?** Revisa los logs con `docker compose logs -f` o consulta SETUP.md
-
