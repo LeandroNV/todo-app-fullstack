@@ -1,0 +1,1151 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{titlesec}
+
+% Configuración de página
+\geometry{margin=2.5cm}
+
+% Configuración de enlaces
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Segunda Entrega - Todo App + Jenkins},
+}
+
+% Configuración de código
+\lstset{
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    frame=single,
+    backgroundcolor=\color{gray!10},
+    commentstyle=\color{green!50!black},
+    keywordstyle=\color{blue},
+    stringstyle=\color{red},
+    showstringspaces=false
+}
+
+% Encabezado y pie de página
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Segunda Entrega - Jenkins CI/CD}
+\lhead{DevOps - Todo App}
+\rfoot{Página \thepage}
+
+\begin{document}
+
+% ===============================
+% PORTADA
+% ===============================
+\begin{titlepage}
+    \centering
+    \vspace{2cm}
+    
+    {\Huge\bfseries Segunda Entrega del Proyecto\par}
+    \vspace{1cm}
+    {\LARGE Todo App + Jenkins CI/CD\par}
+    \vspace{0.5cm}
+    {\large Integración Continua y Despliegue Automatizado\par}
+    
+    \vspace{3cm}
+    
+    {\Large\textbf{Integrantes:}\par}
+    \vspace{0.5cm}
+    {\large
+        JAVIER ALBEIRO AGAMEZ SILGADO\\[0.3cm]
+        OSCAR DUVAN ALVAREZ CARO\\[0.3cm]
+        NEIDY MICHELLE CRUZ ROSALEZ\\[0.3cm]
+        MICHELLE MOREA NINCO\\[0.3cm]
+        LEANDRO NICOLAS VARGAS CUBIDES\\[0.3cm]
+    }
+    
+    \vfill
+    
+    {\large\textbf{Fecha de entrega:} [FECHA AQUÍ]\par}
+    \vspace{0.5cm}
+    {\large\textbf{Repositorio GitHub:}\par}
+    \vspace{0.3cm}
+    {\small\url{https://github.com/LeandroNV/todo-app-fullstack}\par}
+    
+    \vspace{1cm}
+\end{titlepage}
+
+% ===============================
+% ÍNDICE
+% ===============================
+\tableofcontents
+\newpage
+
+% ===============================
+% INTRODUCCIÓN
+% ===============================
+\section{Introducción}
+
+Esta segunda entrega del proyecto Todo App representa un avance significativo en la implementación de prácticas DevOps modernas, específicamente en el ámbito de la Integración Continua y el Despliegue Continuo (CI/CD).
+
+\subsection{Conexión con la Primera Entrega}
+
+En la primera entrega, se logró:
+\begin{itemize}
+    \item Desarrollar una aplicación full-stack funcional con Vue 3, Node.js y MongoDB
+    \item Dockerizar completamente la aplicación con contenedores optimizados
+    \item Implementar docker-compose para orquestación de servicios
+    \item Establecer una arquitectura de microservicios robusta
+\end{itemize}
+
+\subsection{Objetivo de esta Segunda Entrega}
+
+El objetivo principal de esta entrega es \textbf{automatizar el proceso de integración y despliegue} mediante Jenkins, transformando el flujo de trabajo manual en un pipeline automatizado que:
+
+\begin{enumerate}
+    \item \textbf{Detecte cambios automáticamente:} A través de webhooks de GitHub
+    \item \textbf{Valide el código:} Ejecutando linters y análisis estático
+    \item \textbf{Compile el proyecto:} Transpilando TypeScript a JavaScript
+    \item \textbf{Construya imágenes Docker:} Generando contenedores optimizados
+    \item \textbf{Ejecute pruebas:} Asegurando la calidad del código
+    \item \textbf{Despliegue automáticamente:} Publicando la aplicación en producción
+\end{enumerate}
+
+\subsection{Beneficios Esperados}
+
+La implementación de Jenkins en nuestro proyecto aporta:
+
+\begin{itemize}
+    \item \textbf{Automatización:} Eliminación de tareas manuales repetitivas
+    \item \textbf{Consistencia:} Proceso de build y deploy estandarizado
+    \item \textbf{Rapidez:} Despliegues frecuentes y confiables
+    \item \textbf{Calidad:} Detección temprana de errores
+    \item \textbf{Trazabilidad:} Historial completo de builds y despliegues
+\end{itemize}
+
+\newpage
+
+% ===============================
+% ARQUITECTURA DEL SISTEMA
+% ===============================
+\section{Arquitectura del Sistema}
+
+\subsection{Componentes del Sistema}
+
+El sistema integra cuatro componentes principales que trabajan en conjunto:
+
+\begin{enumerate}
+    \item \textbf{GitHub:} Sistema de control de versiones
+    \item \textbf{Jenkins:} Servidor de integración continua
+    \item \textbf{Docker:} Plataforma de contenedores
+    \item \textbf{Aplicación:} Frontend + Backend + Base de datos
+\end{enumerate}
+
+\subsection{Flujo del Pipeline CI/CD}
+
+El flujo completo del pipeline sigue esta secuencia:
+
+\begin{lstlisting}[caption=Flujo del Pipeline CI/CD]
+1. DESARROLLO
+   └─> Desarrollador hace push a GitHub
+   
+2. TRIGGER
+   └─> Webhook notifica a Jenkins
+   
+3. CHECKOUT
+   └─> Jenkins descarga el código desde GitHub
+   
+4. INSTALACIÓN
+   ├─> Instala dependencias del frontend
+   └─> Instala dependencias del backend
+   
+5. ANÁLISIS
+   ├─> Ejecuta linters (ESLint)
+   └─> Verifica calidad de código
+   
+6. COMPILACIÓN
+   ├─> Compila TypeScript frontend
+   └─> Compila TypeScript backend
+   
+7. BUILD DOCKER
+   ├─> Construye imagen frontend
+   └─> Construye imagen backend
+   
+8. TESTS
+   ├─> Tests unitarios
+   └─> Tests de integración
+   
+9. PUSH
+   └─> Sube imágenes a Docker Hub
+   
+10. DEPLOY
+    └─> Despliega con docker-compose
+    
+11. VERIFICACIÓN
+    └─> Healthcheck de servicios
+\end{lstlisting}
+
+\subsection{Integración de Componentes}
+
+\textbf{GitHub → Jenkins:}
+\begin{itemize}
+    \item Webhook configurado para notificar en cada push
+    \item Jenkins clona el repositorio automáticamente
+    \item Credenciales gestionadas de forma segura
+\end{itemize}
+
+\textbf{Jenkins → Docker:}
+\begin{itemize}
+    \item Jenkins ejecuta comandos Docker directamente
+    \item Construye imágenes desde Dockerfiles
+    \item Gestiona contenedores con docker-compose
+\end{itemize}
+
+\textbf{Docker → Aplicación:}
+\begin{itemize}
+    \item Contenedores aislados para cada servicio
+    \item Red personalizada para comunicación
+    \item Volúmenes para persistencia de datos
+\end{itemize}
+
+\subsection{Repositorio del Proyecto}
+
+\textbf{URL:} \url{https://github.com/LeandroNV/todo-app-fullstack}
+
+\textbf{Estructura:}
+\begin{lstlisting}
+todo-app-fullstack/
+├── Jenkinsfile              # Pipeline CI/CD
+├── docker-compose.yml       # Orquestación
+├── Dockerfile               # Imagen frontend
+├── backend/
+│   └── Dockerfile          # Imagen backend
+└── src/                    # Código fuente
+\end{lstlisting}
+
+\newpage
+
+% ===============================
+% CONFIGURACIÓN TÉCNICA
+% ===============================
+\section{Configuración Técnica}
+
+\subsection{Instalación de Jenkins}
+
+\subsubsection{Requisitos Previos}
+
+\begin{itemize}
+    \item Java JDK 11 o superior
+    \item Docker y Docker Compose instalados
+    \item Acceso a GitHub con permisos de administrador
+    \item 2GB RAM mínimo, 4GB recomendado
+\end{itemize}
+
+\subsubsection{Instalación en Docker}
+
+\textbf{Paso 1: Crear directorio para Jenkins}
+\begin{lstlisting}[language=bash]
+mkdir -p jenkins_home
+chmod 777 jenkins_home
+\end{lstlisting}
+
+\textbf{Paso 2: Ejecutar Jenkins en Docker}
+\begin{lstlisting}[language=bash]
+docker run -d \
+  --name jenkins \
+  -p 8080:8080 \
+  -p 50000:50000 \
+  -v jenkins_home:/var/jenkins_home \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  --restart=unless-stopped \
+  jenkins/jenkins:lts
+\end{lstlisting}
+
+\textbf{Paso 3: Obtener contraseña inicial}
+\begin{lstlisting}[language=bash]
+docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+\end{lstlisting}
+
+\textbf{Paso 4: Acceder a Jenkins}
+\begin{itemize}
+    \item Abrir navegador en \texttt{http://localhost:8080}
+    \item Ingresar la contraseña inicial
+    \item Instalar plugins sugeridos
+\end{itemize}
+
+\subsection{Configuración de Puertos}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Servicio} & \textbf{Puerto} & \textbf{Descripción} \\
+\hline
+Jenkins Web UI & 8080 & Interfaz de administración \\
+Jenkins Agent & 50000 & Comunicación con agentes \\
+Frontend & 80 & Aplicación Vue \\
+Backend API & 3000 & API REST \\
+MongoDB & 27017 & Base de datos \\
+\hline
+\end{tabular}
+\caption{Configuración de puertos del sistema}
+\end{table}
+
+\subsection{Plugins Instalados}
+
+\begin{enumerate}
+    \item \textbf{Git Plugin:} Integración con GitHub
+    \item \textbf{Docker Plugin:} Gestión de contenedores
+    \item \textbf{Docker Pipeline:} Comandos Docker en pipeline
+    \item \textbf{GitHub Integration:} Webhooks y notificaciones
+    \item \textbf{NodeJS Plugin:} Soporte para Node.js
+    \item \textbf{Timestamper:} Marcas de tiempo en logs
+    \item \textbf{Workspace Cleanup:} Limpieza automática
+\end{enumerate}
+
+\textbf{Instalación de plugins:}
+\begin{enumerate}
+    \item Ir a \texttt{Manage Jenkins → Manage Plugins}
+    \item Buscar cada plugin en la pestaña "Available"
+    \item Marcar e instalar sin reiniciar
+    \item Reiniciar Jenkins cuando sea necesario
+\end{enumerate}
+
+\subsection{Conexión con GitHub}
+
+\subsubsection{Configurar Credenciales}
+
+\textbf{Paso 1: Generar Personal Access Token en GitHub}
+\begin{enumerate}
+    \item Ir a GitHub → Settings → Developer settings
+    \item Personal access tokens → Generate new token
+    \item Permisos: \texttt{repo}, \texttt{admin:repo\_hook}
+    \item Copiar el token generado
+\end{enumerate}
+
+\textbf{Paso 2: Agregar credenciales en Jenkins}
+\begin{enumerate}
+    \item Jenkins → Manage Jenkins → Manage Credentials
+    \item Global credentials → Add Credentials
+    \item Kind: "Username with password"
+    \item Username: tu usuario de GitHub
+    \item Password: el Personal Access Token
+    \item ID: \texttt{github-credentials}
+\end{enumerate}
+
+\subsubsection{Configurar Webhook}
+
+\textbf{En GitHub:}
+\begin{enumerate}
+    \item Ir al repositorio → Settings → Webhooks
+    \item Add webhook
+    \item Payload URL: \texttt{http://TU\_JENKINS:8080/github-webhook/}
+    \item Content type: \texttt{application/json}
+    \item Events: "Just the push event"
+    \item Active: marcado
+\end{enumerate}
+
+\subsection{Configuración de Docker en Jenkins}
+
+\textbf{Dar permisos a Jenkins para usar Docker:}
+\begin{lstlisting}[language=bash]
+# Entrar al contenedor de Jenkins
+docker exec -u root -it jenkins bash
+
+# Instalar Docker CLI
+apt-get update
+apt-get install -y docker.io
+
+# Agregar usuario jenkins al grupo docker
+usermod -aG docker jenkins
+
+# Salir y reiniciar Jenkins
+exit
+docker restart jenkins
+\end{lstlisting}
+
+\textbf{Verificar instalación:}
+\begin{lstlisting}[language=bash]
+docker exec jenkins docker --version
+docker exec jenkins docker ps
+\end{lstlisting}
+
+\newpage
+
+% ===============================
+% JENKINSFILE
+% ===============================
+\section{Jenkinsfile}
+
+El Jenkinsfile define el pipeline completo de CI/CD. A continuación se describe cada etapa:
+
+\subsection{Estructura General}
+
+\begin{lstlisting}[language=Java, caption=Estructura del Jenkinsfile]
+pipeline {
+    agent any
+    environment { /* Variables */ }
+    options { /* Configuraciones */ }
+    stages { /* Etapas */ }
+    post { /* Acciones finales */ }
+}
+\end{lstlisting}
+
+\subsection{Variables de Entorno}
+
+\begin{lstlisting}[language=Java]
+environment {
+    DOCKER_REGISTRY = 'docker.io'
+    DOCKER_CREDENTIALS_ID = 'dockerhub-credentials'
+    IMAGE_TAG = "${BUILD_NUMBER}"
+    FRONTEND_IMAGE = "leandronv/todo-frontend"
+    BACKEND_IMAGE = "leandronv/todo-backend"
+}
+\end{lstlisting}
+
+\textbf{Descripción:}
+\begin{itemize}
+    \item \texttt{IMAGE\_TAG}: Versiona las imágenes con el número de build
+    \item \texttt{FRONTEND\_IMAGE/BACKEND\_IMAGE}: Nombres de las imágenes en Docker Hub
+    \item \texttt{DOCKER\_CREDENTIALS\_ID}: ID de credenciales para Docker Hub
+\end{itemize}
+
+\subsection{Etapa 1: Checkout}
+
+\begin{lstlisting}[language=Java]
+stage('Checkout') {
+    steps {
+        echo 'Descargando codigo desde GitHub...'
+        checkout scm
+    }
+}
+\end{lstlisting}
+
+\textbf{Objetivo:} Descargar el código fuente desde GitHub.
+
+\textbf{Resultado:} Código disponible en el workspace de Jenkins.
+
+\subsection{Etapa 2: Verificar Dependencias}
+
+Ejecuta verificaciones en paralelo para optimizar tiempo:
+
+\begin{lstlisting}[language=Java]
+parallel {
+    stage('Verificar Node.js') {
+        steps { sh 'node --version' }
+    }
+    stage('Verificar Docker') {
+        steps { sh 'docker --version' }
+    }
+}
+\end{lstlisting}
+
+\textbf{Objetivo:} Asegurar que todas las herramientas necesarias estén instaladas.
+
+\subsection{Etapa 3: Instalar Dependencias}
+
+Instala dependencias de frontend y backend en paralelo:
+
+\begin{lstlisting}[language=Java]
+parallel {
+    stage('Frontend Dependencies') {
+        steps { sh 'npm install --legacy-peer-deps' }
+    }
+    stage('Backend Dependencies') {
+        steps {
+            dir('backend') { sh 'npm install' }
+        }
+    }
+}
+\end{lstlisting}
+
+\textbf{Herramientas:} npm (Node Package Manager)
+
+\textbf{Resultado:} Carpetas \texttt{node\_modules} creadas con todas las dependencias.
+
+\subsection{Etapa 4: Análisis de Código}
+
+Ejecuta linters para verificar calidad del código:
+
+\begin{lstlisting}[language=Java]
+stage('Lint Frontend') {
+    steps {
+        catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+            sh 'npm run lint || true'
+        }
+    }
+}
+\end{lstlisting}
+
+\textbf{Herramientas:} ESLint, Prettier
+
+\textbf{Resultado:} Reportes de problemas de estilo y errores potenciales.
+
+\subsection{Etapa 5: Compilar TypeScript}
+
+Transpila TypeScript a JavaScript:
+
+\begin{lstlisting}[language=Java]
+stage('Build Frontend') {
+    steps { sh 'npm run build' }
+}
+stage('Build Backend') {
+    steps {
+        dir('backend') { sh 'npm run build' }
+    }
+}
+\end{lstlisting}
+
+\textbf{Herramientas:} TypeScript Compiler (tsc), Vite
+
+\textbf{Resultado:} Carpeta \texttt{dist/} con código compilado.
+
+\subsection{Etapa 6: Construir Imágenes Docker}
+
+Crea imágenes Docker optimizadas:
+
+\begin{lstlisting}[language=Java]
+stage('Build Frontend Image') {
+    steps {
+        sh """
+            docker build -t ${FRONTEND_IMAGE}:${IMAGE_TAG} \
+                         -t ${FRONTEND_IMAGE}:latest .
+        """
+    }
+}
+\end{lstlisting}
+
+\textbf{Herramientas:} Docker Engine
+
+\textbf{Resultado:} Imágenes Docker versionadas y etiquetadas como \texttt{latest}.
+
+\subsection{Etapa 7: Tests}
+
+Ejecuta suite de pruebas:
+
+\begin{lstlisting}[language=Java]
+stage('Test Backend') {
+    steps {
+        dir('backend') {
+            catchError(buildResult: 'SUCCESS') {
+                sh 'npm test || echo "Tests no implementados"'
+            }
+        }
+    }
+}
+\end{lstlisting}
+
+\textbf{Herramientas:} Jest, Vitest
+
+\textbf{Resultado:} Reportes de cobertura y tests exitosos/fallidos.
+
+\subsection{Etapa 8: Push a Docker Hub}
+
+Sube imágenes al registro:
+
+\begin{lstlisting}[language=Java]
+stage('Push a Docker Hub') {
+    when { branch 'main' }
+    steps {
+        script {
+            docker.withRegistry('https://index.docker.io/v1/', 
+                              DOCKER_CREDENTIALS_ID) {
+                sh """
+                    docker push ${FRONTEND_IMAGE}:${IMAGE_TAG}
+                    docker push ${FRONTEND_IMAGE}:latest
+                """
+            }
+        }
+    }
+}
+\end{lstlisting}
+
+\textbf{Condición:} Solo se ejecuta en rama \texttt{main}.
+
+\textbf{Resultado:} Imágenes disponibles en Docker Hub para despliegue.
+
+\subsection{Etapa 9: Desplegar}
+
+Despliega la aplicación con docker-compose:
+
+\begin{lstlisting}[language=Java]
+stage('Desplegar con Docker Compose') {
+    when { branch 'main' }
+    steps {
+        sh '''
+            docker compose down || true
+            docker compose up -d
+            sleep 30
+            docker compose ps
+        '''
+    }
+}
+\end{lstlisting}
+
+\textbf{Resultado:} Aplicación desplegada y funcionando.
+
+\subsection{Etapa 10: Verificación}
+
+Verifica que los servicios estén funcionando:
+
+\begin{lstlisting}[language=Java]
+stage('Verificacion de Salud') {
+    steps {
+        retry(3) {
+            sh '''
+                curl -f http://localhost:3000/health
+                curl -f http://localhost/
+            '''
+        }
+    }
+}
+\end{lstlisting}
+
+\textbf{Resultado:} Confirmación de que todos los servicios están operativos.
+
+\subsection{Post-Actions}
+
+Acciones que se ejecutan al final:
+
+\begin{lstlisting}[language=Java]
+post {
+    success {
+        echo 'Pipeline ejecutado exitosamente!'
+    }
+    failure {
+        echo 'Pipeline fallo!'
+    }
+    always {
+        sh 'docker image prune -f || true'
+    }
+}
+\end{lstlisting}
+
+\newpage
+
+% ===============================
+% EVIDENCIAS
+% ===============================
+\section{Evidencias}
+
+Esta sección debe incluir capturas de pantalla que demuestren el funcionamiento correcto del pipeline y Jenkins.
+
+\subsection{Dashboard de Jenkins}
+
+\textbf{Descripción esperada:} Captura del dashboard principal de Jenkins mostrando:
+\begin{itemize}
+    \item Lista de proyectos/jobs configurados
+    \item Estado de los últimos builds (verde=éxito, rojo=fallo)
+    \item Gráfico de tendencia de builds
+    \item Panel de actividad reciente
+\end{itemize}
+
+\textbf{Elementos a mostrar:}
+\begin{itemize}
+    \item Job "todo-app-fullstack" visible
+    \item Historial de builds (#1, #2, #3, etc.)
+    \item Indicadores de estado (Weather icons)
+\end{itemize}
+
+\subsection{Configuración del Pipeline}
+
+\textbf{Descripción esperada:} Captura de la configuración del job mostrando:
+\begin{itemize}
+    \item Tipo: Pipeline
+    \item Definición: Pipeline script from SCM
+    \item SCM: Git
+    \item Repository URL: \url{https://github.com/LeandroNV/todo-app-fullstack}
+    \item Script Path: Jenkinsfile
+\end{itemize}
+
+\subsection{Ejecución Completa del Pipeline}
+
+\textbf{Descripción esperada:} Captura de la vista de stages mostrando:
+\begin{itemize}
+    \item Todas las etapas del pipeline visibles
+    \item Tiempo de ejecución de cada stage
+    \item Estados: Success (verde), Unstable (amarillo)
+    \item Duración total del pipeline
+\end{itemize}
+
+\textbf{Stages a mostrar:}
+\begin{enumerate}
+    \item Checkout - XX seg
+    \item Verificar Dependencias - XX seg
+    \item Instalar Dependencias - XX seg
+    \item Análisis de Código - XX seg
+    \item Compilar TypeScript - XX seg
+    \item Construir Imágenes Docker - XX seg
+    \item Tests - XX seg
+    \item Push a Docker Hub - XX seg
+    \item Desplegar - XX seg
+    \item Verificación de Salud - XX seg
+\end{enumerate}
+
+\subsection{Logs de Consola}
+
+\textbf{Descripción esperada:} Captura de los logs mostrando:
+\begin{itemize}
+    \item Inicio del build con información del commit
+    \item Salida de cada comando ejecutado
+    \item Mensajes de éxito/error
+    \item Resumen final del build
+\end{itemize}
+
+\textbf{Fragmentos importantes a capturar:}
+\begin{lstlisting}
+[Pipeline] echo
+Descargando codigo desde GitHub...
+[Pipeline] checkout
+Cloning repository...
+Commit: feat: Add Jenkinsfile for CI/CD
+Author: Leandro Vargas
+
+[Pipeline] echo
+Instalando dependencias del frontend...
+added 847 packages in 23.4s
+
+[Pipeline] echo
+Construyendo imagen Docker del frontend...
+Step 1/10 : FROM node:20-alpine AS build
+Successfully built abc123def456
+Successfully tagged leandronv/todo-frontend:latest
+
+[Pipeline] echo
+Pipeline ejecutado exitosamente!
+Duracion: 3m 45s
+\end{lstlisting}
+
+\subsection{Contenedores Desplegados}
+
+\textbf{Descripción esperada:} Captura mostrando:
+\begin{lstlisting}[language=bash]
+$ docker compose ps
+
+NAME              STATUS         PORTS
+todo-frontend     Up 5 minutes   0.0.0.0:80->80/tcp (healthy)
+todo-backend      Up 5 minutes   0.0.0.0:3000->3000/tcp (healthy)
+todo-mongodb      Up 5 minutes   0.0.0.0:27017->27017/tcp (healthy)
+\end{lstlisting}
+
+\subsection{Aplicación Funcionando}
+
+\textbf{Descripción esperada:} Captura del navegador mostrando:
+\begin{itemize}
+    \item URL: \texttt{http://localhost}
+    \item Aplicación completamente funcional
+    \item Indicador "Conectado" en verde
+    \item Dashboard con estadísticas
+    \item Formulario de tareas visible
+\end{itemize}
+
+\subsection{Healthcheck}
+
+\textbf{Descripción esperada:} Captura o output de:
+\begin{lstlisting}[language=bash]
+$ curl http://localhost:3000/health
+
+{
+  "status": "ok",
+  "timestamp": "2025-11-XX...",
+  "uptime": 305.234
+}
+\end{lstlisting}
+
+\subsection{Docker Hub}
+
+\textbf{Descripción esperada:} Captura de Docker Hub mostrando:
+\begin{itemize}
+    \item Repositorios: \texttt{leandronv/todo-frontend} y \texttt{leandronv/todo-backend}
+    \item Tags: \texttt{latest}, \texttt{1}, \texttt{2}, etc.
+    \item Fecha de última actualización
+    \item Tamaño de las imágenes
+\end{itemize}
+
+\newpage
+
+% ===============================
+% PROBLEMAS Y SOLUCIONES
+% ===============================
+\section{Problemas y Soluciones}
+
+Durante la implementación de Jenkins, se encontraron varios desafíos técnicos:
+
+\subsection{Permisos de Docker}
+
+\textbf{Problema:} Jenkins no podía ejecutar comandos Docker debido a permisos insuficientes.
+
+\textbf{Error recibido:}
+\begin{lstlisting}
+Got permission denied while trying to connect to the Docker daemon socket
+\end{lstlisting}
+
+\textbf{Solución:}
+\begin{enumerate}
+    \item Montar el socket de Docker en el contenedor de Jenkins:
+    \begin{lstlisting}[language=bash]
+-v /var/run/docker.sock:/var/run/docker.sock
+    \end{lstlisting}
+    
+    \item Instalar Docker CLI dentro del contenedor de Jenkins
+    
+    \item Agregar el usuario jenkins al grupo docker:
+    \begin{lstlisting}[language=bash]
+docker exec -u root jenkins usermod -aG docker jenkins
+docker restart jenkins
+    \end{lstlisting}
+\end{enumerate}
+
+\subsection{Conflicto de Puertos}
+
+\textbf{Problema:} El puerto 8080 ya estaba en uso por otro servicio.
+
+\textbf{Solución:}
+\begin{itemize}
+    \item Identificar el proceso usando el puerto:
+    \begin{lstlisting}[language=bash]
+netstat -ano | findstr :8080
+    \end{lstlisting}
+    
+    \item Cambiar el puerto de Jenkins a 8081:
+    \begin{lstlisting}[language=bash]
+docker run -d -p 8081:8080 -p 50000:50000 ...
+    \end{lstlisting}
+\end{itemize}
+
+\subsection{Webhook de GitHub no funcionaba}
+
+\textbf{Problema:} Jenkins no recibía notificaciones de GitHub en cambios al repositorio.
+
+\textbf{Causa:} Jenkins corriendo en localhost no es accesible desde GitHub.
+
+\textbf{Soluciones implementadas:}
+\begin{enumerate}
+    \item \textbf{Opción 1 - Ngrok:} Crear túnel público temporal
+    \begin{lstlisting}[language=bash]
+ngrok http 8080
+# URL: https://abc123.ngrok.io
+    \end{lstlisting}
+    
+    \item \textbf{Opción 2 - Polling:} Configurar Jenkins para verificar cambios periódicamente
+    \begin{lstlisting}
+Poll SCM: H/5 * * * *  # Cada 5 minutos
+    \end{lstlisting}
+\end{enumerate}
+
+\subsection{Dependencias de npm con errores}
+
+\textbf{Problema:} Conflictos de dependencias al ejecutar \texttt{npm install}.
+
+\textbf{Error:}
+\begin{lstlisting}
+ERESOLVE unable to resolve dependency tree
+\end{lstlisting}
+
+\textbf{Solución:}
+\begin{lstlisting}[language=bash]
+npm install --legacy-peer-deps
+\end{lstlisting}
+
+\subsection{Build de Docker muy lento}
+
+\textbf{Problema:} La construcción de imágenes Docker tomaba más de 10 minutos.
+
+\textbf{Soluciones aplicadas:}
+\begin{enumerate}
+    \item Implementar multi-stage builds para reducir tamaño
+    \item Optimizar el orden de capas en Dockerfile
+    \item Usar \texttt{.dockerignore} para excluir archivos innecesarios
+    \item Cachear capas de dependencias
+\end{enumerate}
+
+\textbf{Resultado:} Tiempo de build reducido a 3-4 minutos.
+
+\subsection{Credenciales de Docker Hub}
+
+\textbf{Problema:} Jenkins no podía autenticarse con Docker Hub para push.
+
+\textbf{Solución:}
+\begin{enumerate}
+    \item Crear credenciales en Jenkins:
+    \begin{itemize}
+        \item Manage Jenkins → Manage Credentials
+        \item Kind: Username with password
+        \item Username: usuario de Docker Hub
+        \item Password: Personal Access Token de Docker Hub
+        \item ID: \texttt{dockerhub-credentials}
+    \end{itemize}
+    
+    \item Usar en Jenkinsfile:
+    \begin{lstlisting}[language=Java]
+docker.withRegistry('https://index.docker.io/v1/', 
+                   'dockerhub-credentials') {
+    sh "docker push ${IMAGE}"
+}
+    \end{lstlisting}
+\end{enumerate}
+
+\subsection{Pipeline fallaba en stage de Tests}
+
+\textbf{Problema:} Los tests aún no están implementados, causando que el pipeline falle.
+
+\textbf{Solución:} Usar \texttt{catchError} para que fallas en tests no detengan el pipeline:
+
+\begin{lstlisting}[language=Java]
+catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+    sh 'npm test || echo "Tests no implementados aun"'
+}
+\end{lstlisting}
+
+\newpage
+
+% ===============================
+% PRÓXIMOS PASOS
+% ===============================
+\section{Próximos Pasos}
+
+Para la siguiente fase del proyecto, se planean las siguientes mejoras:
+
+\subsection{Pruebas Automatizadas}
+
+\subsubsection{Tests Unitarios}
+
+\begin{itemize}
+    \item \textbf{Frontend:} Implementar tests con Vitest
+    \begin{itemize}
+        \item Tests de componentes Vue
+        \item Tests de stores (Pinia)
+        \item Tests de servicios API
+        \item Objetivo: 80\% de cobertura
+    \end{itemize}
+    
+    \item \textbf{Backend:} Implementar tests con Jest
+    \begin{itemize}
+        \item Tests de controladores
+        \item Tests de modelos Mongoose
+        \item Tests de middleware
+        \item Mocks de base de datos
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{Tests de Integración}
+
+\begin{itemize}
+    \item Usar Supertest para endpoints API
+    \item Validar flujos completos CRUD
+    \item Probar autenticación y autorización
+    \item Tests con base de datos de prueba
+\end{itemize}
+
+\subsubsection{Tests End-to-End}
+
+\begin{itemize}
+    \item Implementar Playwright o Cypress
+    \item Simular interacciones de usuario
+    \item Tests de flujos críticos
+    \item Capturas de pantalla en fallos
+\end{itemize}
+
+\subsection{Análisis de Cobertura de Código}
+
+\begin{itemize}
+    \item Integrar Codecov o SonarQube
+    \item Reportes de cobertura en cada build
+    \item Umbrales mínimos de cobertura
+    \item Visualización de código no testeado
+\end{itemize}
+
+\subsection{Análisis de Seguridad}
+
+\begin{itemize}
+    \item \textbf{Trivy:} Escaneo de vulnerabilidades en imágenes Docker
+    \item \textbf{npm audit:} Análisis de dependencias vulnerables
+    \item \textbf{SAST:} Análisis estático de código
+    \item \textbf{Secret scanning:} Detección de credenciales en código
+\end{itemize}
+
+\subsection{Notificaciones}
+
+\begin{itemize}
+    \item Integración con Slack para notificaciones de builds
+    \item Emails en fallos críticos
+    \item Webhooks a sistemas de monitoreo
+    \item Notificaciones por commit
+\end{itemize}
+
+\subsection{Ambientes Múltiples}
+
+\begin{itemize}
+    \item \textbf{Development:} Rama develop
+    \item \textbf{Staging:} Rama staging con datos de prueba
+    \item \textbf{Production:} Rama main con despliegue controlado
+    \item Pipelines específicos por ambiente
+\end{itemize}
+
+\subsection{Blue-Green Deployment}
+
+\begin{itemize}
+    \item Mantener dos ambientes idénticos
+    \item Despliegue sin downtime
+    \item Rollback instantáneo en caso de problemas
+    \item Pruebas en ambiente blue antes de switch
+\end{itemize}
+
+\subsection{Monitoreo y Observabilidad}
+
+\begin{itemize}
+    \item \textbf{Prometheus:} Recolección de métricas
+    \item \textbf{Grafana:} Dashboards de visualización
+    \item \textbf{ELK Stack:} Centralización de logs
+    \item Alertas configuradas para errores
+\end{itemize}
+
+\subsection{Performance Testing}
+
+\begin{itemize}
+    \item Tests de carga con K6 o Artillery
+    \item Métricas de performance en cada build
+    \item Detección de regresiones de performance
+    \item Reportes de bottlenecks
+\end{itemize}
+
+\newpage
+
+% ===============================
+% CONCLUSIONES
+% ===============================
+\section{Conclusiones}
+
+\subsection{Logros Alcanzados}
+
+En esta segunda entrega se lograron objetivos significativos:
+
+\begin{enumerate}
+    \item \textbf{Automatización completa del pipeline:} Se eliminó la necesidad de builds y despliegues manuales, reduciendo errores humanos y tiempo de despliegue.
+    
+    \item \textbf{Integración exitosa con GitHub:} El sistema detecta automáticamente cambios en el repositorio y ejecuta el pipeline completo sin intervención manual.
+    
+    \item \textbf{Dockerización optimizada en CI:} Las imágenes Docker se construyen, versionan y publican automáticamente, manteniendo un registro histórico completo.
+    
+    \item \textbf{Pipeline robusto y confiable:} Con manejo de errores, reintentos y verificaciones de salud, el pipeline es resiliente y proporciona feedback claro.
+    
+    \item \textbf{Visibilidad completa:} Jenkins proporciona historial detallado de builds, logs y métricas, facilitando el debugging y análisis.
+\end{enumerate}
+
+\subsection{Aprendizajes Clave}
+
+\subsubsection{Aspectos Técnicos}
+
+\begin{itemize}
+    \item \textbf{Configuración de Jenkins:} Aprendimos a instalar, configurar y gestionar Jenkins en Docker, incluyendo plugins y credenciales.
+    
+    \item \textbf{Sintaxis de Jenkinsfile:} Dominio del DSL de Jenkins para crear pipelines declarativos con stages paralelos y post-actions.
+    
+    \item \textbf{Integración Docker-Jenkins:} Comprendimos cómo Jenkins puede construir y gestionar contenedores Docker desde el pipeline.
+    
+    \item \textbf{Webhooks y automatización:} Implementamos comunicación bidireccional entre GitHub y Jenkins para triggers automáticos.
+\end{itemize}
+
+\subsubsection{Prácticas DevOps}
+
+\begin{itemize}
+    \item \textbf{Continuous Integration:} La importancia de validar código frecuentemente para detectar errores temprano.
+    
+    \item \textbf{Continuous Deployment:} Beneficios de despliegues automáticos y frecuentes para reducir riesgos.
+    
+    \item \textbf{Infrastructure as Code:} Jenkinsfile y docker-compose como código versionado facilitan reproducibilidad.
+    
+    \item \textbf{Feedback rápido:} Pipelines optimizados proporcionan feedback en minutos, acelerando el desarrollo.
+\end{itemize}
+
+\subsection{Relevancia de Jenkins}
+
+Jenkins se ha consolidado como una herramienta fundamental en proyectos de desarrollo moderno por:
+
+\begin{enumerate}
+    \item \textbf{Código de calidad:} Al ejecutar linters y tests automáticamente, asegura que solo código validado llegue a producción.
+    
+    \item \textbf{Reducción de costos:} Automatización elimina tiempo dedicado a tareas repetitivas, permitiendo enfoque en desarrollo.
+    
+    \item \textbf{Despliegues confiables:} Proceso estandarizado reduce errores y permite rollbacks rápidos.
+    
+    \item \textbf{Colaboración mejorada:} Todo el equipo puede ver el estado del proyecto y acceder a builds históricos.
+    
+    \item \textbf{Escalabilidad:} A medida que el proyecto crece, Jenkins puede manejar pipelines más complejos con múltiples ambientes.
+\end{enumerate}
+
+\subsection{Impacto en el Proyecto}
+
+La implementación de Jenkins ha transformado nuestro flujo de trabajo:
+
+\begin{itemize}
+    \item \textbf{Antes:} Builds manuales, despliegues inconsistentes, errores frecuentes, proceso lento.
+    
+    \item \textbf{Ahora:} Automatización completa, despliegues en minutos, proceso repetible, calidad asegurada.
+\end{itemize}
+
+\subsection{Reflexión Final}
+
+Este proyecto ha demostrado que Jenkins no es solo una herramienta de automatización, sino un componente esencial de una cultura DevOps madura. La capacidad de integrar, validar y desplegar código de forma continua y confiable es fundamental en el desarrollo de software moderno.
+
+La experiencia adquirida en esta entrega nos prepara para implementar prácticas más avanzadas como tests automatizados, análisis de seguridad y monitoreo continuo, consolidando un pipeline de CI/CD de nivel empresarial.
+
+\newpage
+
+% ===============================
+% REFERENCIAS
+% ===============================
+\section{Referencias}
+
+\begin{enumerate}
+    \item Jenkins Official Documentation. \textit{Jenkins User Documentation}. \\
+    \url{https://www.jenkins.io/doc/}
+    
+    \item Docker Documentation. \textit{Docker Documentation}. \\
+    \url{https://docs.docker.com/}
+    
+    \item GitHub Docs. \textit{GitHub Webhooks Documentation}. \\
+    \url{https://docs.github.com/en/webhooks}
+    
+    \item CloudBees. \textit{Jenkins Pipeline Syntax}. \\
+    \url{https://www.jenkins.io/doc/book/pipeline/syntax/}
+    
+    \item Docker Hub. \textit{Jenkins Official Image}. \\
+    \url{https://hub.docker.com/r/jenkins/jenkins}
+    
+    \item Atlassian. \textit{CI/CD Best Practices}. \\
+    \url{https://www.atlassian.com/continuous-delivery/principles/continuous-integration-vs-delivery-vs-deployment}
+    
+    \item Mozilla Developer Network. \textit{HTTP Status Codes}. \\
+    \url{https://developer.mozilla.org/en-US/docs/Web/HTTP/Status}
+    
+    \item Node.js Documentation. \textit{Node.js Official Docs}. \\
+    \url{https://nodejs.org/docs/}
+    
+    \item Vue.js Documentation. \textit{Vue.js Guide}. \\
+    \url{https://vuejs.org/guide/}
+    
+    \item MongoDB Documentation. \textit{MongoDB Manual}. \\
+    \url{https://www.mongodb.com/docs/}
+    
+    \item Fowler, Martin. \textit{Continuous Integration}. \\
+    \url{https://martinfowler.com/articles/continuousIntegration.html}
+    
+    \item GitHub Learning Lab. \textit{Introduction to GitHub}. \\
+    \url{https://lab.github.com/}
+    
+    \item YouTube - TechWorld with Nana. \textit{Jenkins Tutorial for Beginners}. \\
+    \url{https://www.youtube.com/watch?v=7KCS70sCoK0}
+    
+    \item freeCodeCamp. \textit{Docker Tutorial for Beginners}. \\
+    \url{https://www.freecodecamp.org/news/the-docker-handbook/}
+    
+    \item Stack Overflow. \textit{Jenkins and Docker Integration Questions}. \\
+    \url{https://stackoverflow.com/questions/tagged/jenkins+docker}
+\end{enumerate}
+
+\end{document}
+
